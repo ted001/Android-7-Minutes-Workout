@@ -2,19 +2,33 @@ package com.ted.a7minutesworkout
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ted.a7minutesworkout.databinding.ActivityExerciseBinding
 
 class ExerciseActivity : AppCompatActivity() {
 
-    // (Step 1 - Adding a variables for the 10 seconds REST timer.)
+    // Adding a variables for the 10 seconds REST timer.
     // Variable for Rest Timer and later on we will initialize it.
     private var restTimer: CountDownTimer? = null
 
     // Variable for timer progress. As initial value the rest progress is set to 0.
     // As we are about to start.
     private var restProgress = 0
+
+    // Adding a variables for the 30 seconds Exercise timer.
+    // Variable for Exercise Timer and later on we will initialize it.
+    private var exerciseTimer: CountDownTimer? = null
+    // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
+    // As we are about to start.
+    private var exerciseProgress = 0
+
+    // We will initialize the list later.
+    private var exerciseList: ArrayList<ExerciseModel>? = null
+    // Current Position of Exercise.
+    private var currentExercisePosition = -1
+
 
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
@@ -34,8 +48,7 @@ class ExerciseActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        //(Step 4 - Calling the function to make it visible on screen.)-->
-        // REST View is set in this function
+        exerciseList = Constants.defaultExerciseList()
         setupRestView()
     }
 
@@ -45,6 +58,11 @@ class ExerciseActivity : AppCompatActivity() {
      * Function is used to set the timer for REST.
      */
     private fun setupRestView() {
+        binding?.flRestView?.visibility = View.VISIBLE
+        binding?.tvTitle?.visibility = View.VISIBLE
+        binding?.tvExerciseName?.visibility = View.INVISIBLE
+        binding?.flExerciseView?.visibility = View.INVISIBLE
+        binding?.ivImage?.visibility = View.INVISIBLE
         /**
          * Here firstly we will check if the timer is running the and
          * it is not null then cancel the running timer and start the new one.
@@ -87,17 +105,73 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
+                currentExercisePosition++
                 // When the 10 seconds will complete this will be executed.
-                Toast.makeText(
-                    this@ExerciseActivity,
-                    "Here now we will start the exercise.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                setupExerciseView()
             }
         }.start()
     }
 
-    //(Step 5 - Destroying the timer when closing the activity or app.)-->
+    // Step 4 - Setting up the Exercise View with a 30 seconds timer.
+    /**
+     * Function is used to set the progress of the timer using the progress for Exercise View.
+     */
+    private fun setupExerciseView() {
+
+        // Here according to the view make it visible as this is Exercise View
+        // so exercise view is visible and rest view is not.
+        binding?.flRestView?.visibility = View.INVISIBLE
+        binding?.tvTitle?.visibility = View.INVISIBLE
+        binding?.tvExerciseName?.visibility = View.VISIBLE
+        binding?.flExerciseView?.visibility = View.VISIBLE
+        binding?.ivImage?.visibility = View.VISIBLE
+
+        /**
+         * Here firstly we will check if the timer is running
+         * and it is not null then cancel the running timer and start the new one.
+         * And set the progress to the initial value which is 0.
+         */
+        if (exerciseTimer != null) {
+            exerciseTimer?.cancel()
+            exerciseProgress = 0
+        }
+
+        binding?.ivImage?.setImageResource(exerciseList!![currentExercisePosition].image)
+        binding?.tvExerciseName?.text = exerciseList!![currentExercisePosition].name
+
+        setExerciseProgressBar()
+    }
+
+    // After REST View Setting up the 30 seconds timer for the Exercise view and updating it continuously.
+    /**
+     * Function is used to set the progress of the timer using the progress for Exercise View for 30 Seconds
+     */
+    private fun setExerciseProgressBar() {
+
+        binding?.progressBarExercise?.progress = exerciseProgress
+
+        exerciseTimer = object : CountDownTimer(30000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                exerciseProgress++
+                binding?.progressBarExercise?.progress = 30 - exerciseProgress
+                binding?.tvTimerExercise?.text = (30 - exerciseProgress).toString()
+            }
+
+            override fun onFinish() {
+                if (currentExercisePosition < exerciseList?.size!! - 1) {
+                    setupRestView()
+                } else {
+                    Toast.makeText(
+                        this@ExerciseActivity,
+                        "Congratulations! You have completed the 7 minutes workout.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }.start()
+    }
+
+    // Destroying the timer when closing the activity or app
     /**
      * Here in the Destroy function we will reset the rest timer if it is running.
      */
