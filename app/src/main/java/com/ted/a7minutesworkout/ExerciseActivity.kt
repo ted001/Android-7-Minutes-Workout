@@ -2,12 +2,16 @@ package com.ted.a7minutesworkout
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ted.a7minutesworkout.databinding.ActivityExerciseBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ExerciseActivity : AppCompatActivity() {
+class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
 
     // Adding a variables for the 10 seconds REST timer.
     // Variable for Rest Timer and later on we will initialize it.
@@ -29,6 +33,8 @@ class ExerciseActivity : AppCompatActivity() {
     // Current Position of Exercise.
     private var currentExercisePosition = -1
 
+    // Variable for Text to Speech
+    private var tts: TextToSpeech? = null
 
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
@@ -48,6 +54,7 @@ class ExerciseActivity : AppCompatActivity() {
             onBackPressed()
         }
 
+        tts = TextToSpeech(this, this)
         exerciseList = Constants.defaultExerciseList()
         setupRestView()
     }
@@ -138,6 +145,7 @@ class ExerciseActivity : AppCompatActivity() {
             exerciseProgress = 0
         }
 
+        speakOut(exerciseList!![currentExercisePosition].name)
         binding?.ivImage?.setImageResource(exerciseList!![currentExercisePosition].image)
         binding?.tvExerciseName?.text = exerciseList!![currentExercisePosition].name
 
@@ -178,11 +186,33 @@ class ExerciseActivity : AppCompatActivity() {
      * Here in the Destroy function we will reset the rest timer if it is running.
      */
     public override fun onDestroy() {
+        super.onDestroy()
         if (restTimer != null) {
             restTimer?.cancel()
             restProgress = 0
         }
-        super.onDestroy()
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
         binding = null
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            // set US English as language for tts
+            val result = tts?.setLanguage(Locale.US)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The Language specified is not supported!")
+            }
+
+        } else {
+            Log.e("TTS", "Initialization Failed!")
+        }
+    }
+
+    private fun speakOut(text: String) {
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 }
