@@ -60,9 +60,12 @@ class ExerciseActivity : AppCompatActivity() {
     private fun setupRestView() {
         binding?.flRestView?.visibility = View.VISIBLE
         binding?.tvTitle?.visibility = View.VISIBLE
+        binding?.upcomingLabel?.visibility = View.VISIBLE
+        binding?.tvUpcomingExerciseName?.visibility = View.VISIBLE
         binding?.tvExerciseName?.visibility = View.INVISIBLE
         binding?.flExerciseView?.visibility = View.INVISIBLE
         binding?.ivImage?.visibility = View.INVISIBLE
+
         /**
          * Here firstly we will check if the timer is running the and
          * it is not null then cancel the running timer and start the new one.
@@ -73,7 +76,7 @@ class ExerciseActivity : AppCompatActivity() {
             restProgress = 0
         }
 
-        // This function is used to set the progress details.
+        binding?.tvUpcomingExerciseName?.text = exerciseList!![currentExercisePosition + 1].name
         setRestProgressBar()
     }
 
@@ -117,11 +120,10 @@ class ExerciseActivity : AppCompatActivity() {
      * Function is used to set the progress of the timer using the progress for Exercise View.
      */
     private fun setupExerciseView() {
-
-        // Here according to the view make it visible as this is Exercise View
-        // so exercise view is visible and rest view is not.
         binding?.flRestView?.visibility = View.INVISIBLE
         binding?.tvTitle?.visibility = View.INVISIBLE
+        binding?.tvUpcomingExerciseName?.visibility = View.INVISIBLE
+        binding?.upcomingLabel?.visibility = View.INVISIBLE
         binding?.tvExerciseName?.visibility = View.VISIBLE
         binding?.flExerciseView?.visibility = View.VISIBLE
         binding?.ivImage?.visibility = View.VISIBLE
