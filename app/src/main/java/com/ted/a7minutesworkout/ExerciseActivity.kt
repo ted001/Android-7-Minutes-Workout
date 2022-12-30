@@ -1,5 +1,7 @@
 package com.ted.a7minutesworkout
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
@@ -36,6 +38,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
     // Variable for Text to Speech
     private var tts: TextToSpeech? = null
 
+    private var player: MediaPlayer? = null
+
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +69,17 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
      * Function is used to set the timer for REST.
      */
     private fun setupRestView() {
+
+        try {
+            val soundURI =
+                Uri.parse("android.resource://com.ted.a7minutesworkout/" + R.raw.press_start)
+            player = MediaPlayer.create(applicationContext, soundURI)
+            player?.isLooping = false // Sets the player to be looping or non-looping.
+            player?.start() // Starts Playback.
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         binding?.flRestView?.visibility = View.VISIBLE
         binding?.tvTitle?.visibility = View.VISIBLE
         binding?.upcomingLabel?.visibility = View.VISIBLE
@@ -194,6 +209,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
         if (tts != null) {
             tts!!.stop()
             tts!!.shutdown()
+        }
+        if(player != null){
+            player!!.stop()
         }
         binding = null
     }
