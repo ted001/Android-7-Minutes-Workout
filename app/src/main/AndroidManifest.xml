@@ -25,6 +25,9 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name="com.ted.a7minutesworkout.ExerciseActivity" />
+        <activity android:name="com.ted.a7minutesworkout.BMIActivity" />
+        <activity android:name="com.ted.a7minutesworkout.HistoryActivity" />
     </application>
 
 </manifest>
