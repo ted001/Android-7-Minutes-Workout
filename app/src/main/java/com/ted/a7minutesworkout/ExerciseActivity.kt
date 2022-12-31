@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ted.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,6 +30,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
     // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
     // As we are about to start.
     private var exerciseProgress = 0
+    private var exerciseTimerDuration:Long = 30
 
     // We will initialize the list later.
     private var exerciseList: ArrayList<ExerciseModel>? = null
@@ -42,6 +44,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
 
     // create a binding variable
     private var binding: ActivityExerciseBinding? = null
+
+    private var exerciseAdapter: ExerciseStatusAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //inflate the layout
@@ -61,6 +66,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
         tts = TextToSpeech(this, this)
         exerciseList = Constants.defaultExerciseList()
         setupRestView()
+        setupExerciseStatusRecyclerView()
     }
 
 
@@ -175,11 +181,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
 
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(exerciseTimerDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = 30 - exerciseProgress
-                binding?.tvTimerExercise?.text = (30 - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress = exerciseTimerDuration.toInt() - exerciseProgress
+                binding?.tvTimerExercise?.text = (exerciseTimerDuration.toInt() - exerciseProgress).toString()
             }
 
             override fun onFinish() {
@@ -232,5 +238,18 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
 
     private fun speakOut(text: String) {
         tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    private fun setupExerciseStatusRecyclerView() {
+        // Defining a layout manager for the recycle view
+        // Here we have used a LinearLayout Manager with horizontal scroll.
+        binding?.rvExerciseStatus?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        // As the adapter expects the exercises list and context so initialize it passing it.
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
+
+        // Adapter class is attached to recycler view
+        binding?.rvExerciseStatus?.adapter = exerciseAdapter
     }
 }
