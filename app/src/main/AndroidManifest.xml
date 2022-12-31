@@ -34,8 +34,12 @@
         <activity
             android:name="com.ted.a7minutesworkout.ExerciseActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.ted.a7minutesworkout.BMIActivity" />
-        <activity android:name="com.ted.a7minutesworkout.HistoryActivity" />
+        <activity
+            android:name="com.ted.a7minutesworkout.BMIActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ted.a7minutesworkout.HistoryActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.ted.a7minutesworkout.FinishActivity"
             android:screenOrientation="portrait" />
