@@ -14,7 +14,7 @@ import com.ted.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
+class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     // Adding a variables for the 10 seconds REST timer.
     // Variable for Rest Timer and later on we will initialize it.
@@ -27,13 +27,15 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
     // Adding a variables for the 30 seconds Exercise timer.
     // Variable for Exercise Timer and later on we will initialize it.
     private var exerciseTimer: CountDownTimer? = null
+
     // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
     // As we are about to start.
     private var exerciseProgress = 0
-    private var exerciseTimerDuration:Long = 30
+    private var exerciseTimerDuration: Long = 30
 
     // We will initialize the list later.
     private var exerciseList: ArrayList<ExerciseModel>? = null
+
     // Current Position of Exercise.
     private var currentExercisePosition = -1
 
@@ -137,6 +139,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
 
             override fun onFinish() {
                 currentExercisePosition++
+                exerciseList!![currentExercisePosition].isSelected =
+                    true // Current Item is selected
+                exerciseAdapter!!.notifyDataSetChanged() // Notified the current item to adapter class to reflect it into UI.
+
                 // When the 10 seconds will complete this will be executed.
                 setupExerciseView()
             }
@@ -184,11 +190,19 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
         exerciseTimer = object : CountDownTimer(exerciseTimerDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = exerciseTimerDuration.toInt() - exerciseProgress
-                binding?.tvTimerExercise?.text = (exerciseTimerDuration.toInt() - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress =
+                    exerciseTimerDuration.toInt() - exerciseProgress
+                binding?.tvTimerExercise?.text =
+                    (exerciseTimerDuration.toInt() - exerciseProgress).toString()
             }
 
             override fun onFinish() {
+                // exercise is completed so selection is set to false
+                exerciseList!![currentExercisePosition].isSelected = false
+                // updating in the list that this exercise is completed
+                exerciseList!![currentExercisePosition].isCompleted = true
+                exerciseAdapter!!.notifyDataSetChanged()
+
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
                     setupRestView()
                 } else {
@@ -216,7 +230,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener{
             tts!!.stop()
             tts!!.shutdown()
         }
-        if(player != null){
+        if (player != null) {
             player!!.stop()
         }
         binding = null
