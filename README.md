@@ -30,7 +30,7 @@ width="260" hspace="10" vspace="10">
 <img src="screenshot/Finish.png" align="left"
 width="260" hspace="10" vspace="10">
 
-<img src="screenshot/history.png" align="left"
+<img src="screenshot/History.png" align="left"
 width="260" hspace="10" vspace="10">
 
 <img src="screenshot/BMI.png" align="left"
