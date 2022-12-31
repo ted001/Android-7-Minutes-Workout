@@ -1,5 +1,6 @@
 package com.ted.a7minutesworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +24,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     // Variable for timer progress. As initial value the rest progress is set to 0.
     // As we are about to start.
     private var restProgress = 0
+    private var restTimerDuration: Long = 1
 
     // Adding a variables for the 30 seconds Exercise timer.
     // Variable for Exercise Timer and later on we will initialize it.
@@ -31,7 +33,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
     // As we are about to start.
     private var exerciseProgress = 0
-    private var exerciseTimerDuration: Long = 30
+    private var exerciseTimerDuration: Long = 1
 
     // We will initialize the list later.
     private var exerciseList: ArrayList<ExerciseModel>? = null
@@ -127,14 +129,14 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
          */
         // Here we have started a timer of 10 seconds so the 10000 is milliseconds is 10 seconds
         // and the countdown interval is 1 second so it 1000.
-        restTimer = object : CountDownTimer(10000, 1000) {
+        restTimer = object : CountDownTimer(restTimerDuration*1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // It is increased by 1
                 restProgress++
                 // Indicates progress bar progress
-                binding?.progressBar?.progress = 10 - restProgress
+                binding?.progressBar?.progress = restTimerDuration.toInt() - restProgress
                 // Current progress is set to text view in terms of seconds.
-                binding?.tvTimer?.text = (10 - restProgress).toString()
+                binding?.tvTimer?.text = (restTimerDuration.toInt() - restProgress).toString()
             }
 
             override fun onFinish() {
@@ -206,11 +208,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
                     setupRestView()
                 } else {
-                    Toast.makeText(
-                        this@ExerciseActivity,
-                        "Congratulations! You have completed the 7 minutes workout.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    finish()
+                    val intent = Intent(this@ExerciseActivity,FinishActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }.start()
