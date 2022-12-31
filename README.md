@@ -21,17 +21,17 @@ An Application that helps you track your workout routine. Application Using Kotl
 <img src="screenshot/main.png" align="left"
 width="260" hspace="10" vspace="10">
 
-<img src="screenshot/rest.jpg" align="left"
+<img src="screenshot/rest.png" align="left"
 width="260" hspace="10" vspace="10">
 
 <img src="screenshot/exercise.png" align="left"
 width="260" hspace="10" vspace="10">
 
-<img src="screenshot/Finish.jpg" align="left"
+<img src="screenshot/Finish.png" align="left"
 width="260" hspace="10" vspace="10">
 
 <img src="screenshot/history.png" align="left"
 width="260" hspace="10" vspace="10">
 
-<img src="screenshot/BMI.jpg" align="left"
+<img src="screenshot/BMI.png" align="left"
 width="260" hspace="10" vspace="10">
