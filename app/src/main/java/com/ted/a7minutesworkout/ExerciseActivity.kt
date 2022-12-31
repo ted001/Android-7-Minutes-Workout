@@ -26,7 +26,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     // Variable for timer progress. As initial value the rest progress is set to 0.
     // As we are about to start.
     private var restProgress = 0
-    private var restTimerDuration: Long = 1
+    private var restTimerDuration: Long = 10
 
     // Adding a variables for the 30 seconds Exercise timer.
     // Variable for Exercise Timer and later on we will initialize it.
@@ -35,7 +35,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     // Variable for the exercise timer progress. As initial value the exercise progress is set to 0.
     // As we are about to start.
     private var exerciseProgress = 0
-    private var exerciseTimerDuration: Long = 1
+    private var exerciseTimerDuration: Long = 30
 
     // We will initialize the list later.
     private var exerciseList: ArrayList<ExerciseModel>? = null
